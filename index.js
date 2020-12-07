@@ -28,15 +28,37 @@ async function main() {
     let db = MongoUtil.getDB();
 
     app.get('/', async (req,res)=>{
-        let food = await db.colleciton('food').find().toArray();
+        let food = await db.collection('food').find().toArray();
         res.render('food',{
             'foodRecords':food
         })
     })
 
     // display the form to allow the user to add a food consumption
-    app.get('/food/add', (req,res)=>{
+    app.get('/food/add', async (req,res)=>{
         res.render('add_food')
+    })
+
+    app.post('/food/add', async (req,res)=>{
+          // use object destructuring to extract each of the input
+        // of the form
+        let { name, calories, meal, date, tags } = req.body;
+        // same as...
+        // let name = req.body.name;
+        // let calories = req.body.calories;
+        // ...
+        // let tags = req.body.tags
+
+        let newFoodRecord = {
+            'name': name,
+            'calories': parseFloat(calories),
+            'meal':meal,
+            'date':new Date(date),
+            'tags':tags
+        }
+
+        await db.collection('food').insertOne(newFoodRecord);
+        res.redirect('/')
     })
 }
 
