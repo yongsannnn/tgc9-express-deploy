@@ -4,6 +4,9 @@ const MongoUtil = require('./MongoUtil.js')
 const ObjectId = require('mongodb').ObjectId;
 const hbs = require('hbs')
 const wax = require('wax-on')
+const session = require('express-session')
+const cookieParser = require('cookie-parser')
+const flash = require('connect-flash')
 // allows us to inject into the environment (the OS) our environmental variabkes
 require('dotenv').config();
 
@@ -18,6 +21,33 @@ app.set('view engine', 'hbs')
 app.use(express.static('public'))
 // allows express to data submitted via forms
 app.use(express.urlencoded({extended:false}))
+
+// setup the session
+//  var FileStore = require("session-file-store")(session);
+//   var fileStoreOptions = {};
+//   app.use(cookieParser("5046-346-96-349lsal"));
+//   app.use(
+//     session({
+//       store: new FileStore(fileStoreOptions),
+//       cookie: {
+//         originalMaxAge: 60000,
+//       },
+//     })
+//   );
+ app.use(cookieParser("secret"))
+ app.use(session({
+     'cookie': {
+         maxAge: 60000
+     }
+ }))
+ app.use(flash())
+
+// register a middleware for the flash message
+app.use(function(req, res, next){
+    res.locals.success_messages = req.flash('success_messages');
+    res.locals.error_messages = req.flash('error_messages');
+    next();
+})
 
 // setup template inheritance
 wax.on(hbs.handlebars);
@@ -40,6 +70,7 @@ async function main() {
             'foodRecords':food
         })
     })
+
 
     // display the form to allow the user to add a food consumption
     app.get('/food/add', async (req,res)=>{
@@ -65,6 +96,7 @@ async function main() {
         }
 
         await db.collection('food').insertOne(newFoodRecord);
+        req.flash('success_messages', 'New food record has been created')
         res.redirect('/')
     })
 
@@ -123,6 +155,7 @@ async function main() {
         await db.collection('food').deleteOne({
             '_id':ObjectId(req.params.id)
         })
+        req.flash('error_messages', "Food record has been deleted")
         res.redirect('/')
     })
 }
