@@ -1,6 +1,7 @@
 // EXPRESS AND OTHER SETUP
 const express = require('express');
 const MongoUtil = require('./MongoUtil.js')
+const ObjectId = require('mongodb').ObjectId;
 const hbs = require('hbs')
 const wax = require('wax-on')
 // allows us to inject into the environment (the OS) our environmental variabkes
@@ -64,6 +65,64 @@ async function main() {
         }
 
         await db.collection('food').insertOne(newFoodRecord);
+        res.redirect('/')
+    })
+
+    app.get('/food/:id/update', async(req,res)=>{
+
+        // 1. fetch the existing record
+        // use findOne() when we expect only one result
+        let record = await db.collection('food').findOne({
+            '_id': ObjectId(req.params.id)
+        })
+
+        // 2. pass the existing record to the hbs file so that
+        // we can the existing information in the form
+        res.render('edit_food', {
+            'record': record
+        })
+    })
+
+    app.post('/food/:id/update', async(req,res)=>{
+           let { name, calories, meal, date, tags } = req.body;
+        // same as...
+        // let name = req.body.name;
+        // let calories = req.body.calories;
+        // ...
+        // let tags = req.body.tags
+
+        let newFoodRecord = {
+            'name': name,
+            'calories': parseFloat(calories),
+            'meal':meal,
+            'date':new Date(date),
+            'tags':tags
+        }
+
+        db.collection('food').updateOne({
+            '_id':ObjectId(req.params.id)
+        }, {
+            '$set': newFoodRecord
+        });
+
+        res.redirect('/')
+
+    })
+
+    app.get('/food/:id/delete', async(req,res)=>{
+        let foodRecord = await db.collection('food').findOne({
+            '_id': ObjectId(req.params.id)
+        })
+
+        res.render('confirm_delete_food',{
+            'record': foodRecord
+        })
+    })
+
+    app.post('/food/:id/delete', async (req,res)=>{
+        await db.collection('food').deleteOne({
+            '_id':ObjectId(req.params.id)
+        })
         res.redirect('/')
     })
 }

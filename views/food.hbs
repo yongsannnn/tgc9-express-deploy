@@ -9,6 +9,7 @@
                     <th>Calories</th>
                     <th>Tags</th>
                     <th>Date</th>
+                    <th></th>
                 </tr>
             </thead>
             {{#each foodRecords}}
@@ -18,6 +19,10 @@
                     <td>{{this.calories}}</td>
                     <td>{{this.tags}}</td>
                     <td>{{date this.date "DD/MM/YYYY"}}</td>
+                    <td>
+                        <a href="/food/{{this._id}}/update" class="btn btn-primary btn-sm" >Edit</a>
+                        <a href="/food/{{this._id}}/delete" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
                 </tr>
             {{/each}}
         </table>
