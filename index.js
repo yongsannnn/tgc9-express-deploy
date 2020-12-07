@@ -22,6 +22,12 @@ app.use(express.urlencoded({extended:false}))
 wax.on(hbs.handlebars);
 wax.setLayoutPath('./views/layouts')
 
+// handlebar helpers
+ var helpers = require("handlebars-helpers")({
+    handlebars: hbs.handlebars
+  });
+
+
 async function main() {
     const MONGO_URL=process.env.MONGO_URL;
     await MongoUtil.connect(MONGO_URL, "tgc9_cico");
