@@ -2,7 +2,8 @@
 const express = require('express');
 const {setupExpressApp} = require('./setupExpress');
 const {setupHBS} = require('./setupHBS');
-const MongoUtil = require('./MongoUtil.js')
+const MongoUtil = require('./MongoUtil.js');
+
 
 // allows us to inject into the environment (the OS) our environmental variabkes
 require('dotenv').config();
@@ -18,9 +19,12 @@ async function main() {
 
     const foodRoutes = require('./routes/foodRoutes')
     const landingRoutes = require('./routes/landingRoutes')
-    
+    const userRoutes = require('./routes/userRoutes')
+
+
     app.use('', landingRoutes);
     app.use('/food', foodRoutes);
+    app.use('/users', userRoutes);
 
 }
 
