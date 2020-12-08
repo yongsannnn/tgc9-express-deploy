@@ -41,10 +41,10 @@ router.post('/login', async (req,res,next)=>{
         // caution: the I below is upper case
         let loginError = req.logIn(user, (loginError)=>{
             if (loginError) {
-                 console.log(loginError);
                  res.send("Error logging in")
             } else {
-                res.send("user has logged in successfully");
+                req.flash("Login successful!");
+                res.redirect("/users/success");
             }
         })
 
@@ -57,6 +57,12 @@ router.post('/login', async (req,res,next)=>{
 router.get('/profile', (req,res)=>{
     console.log(req.isAuthenticated());
     res.send(req.user);
+})
+
+router.get('/success', (req,res)=>{
+    res.render('users/success_login',{
+        'user': req.user
+    })
 })
 
 module.exports = router;
