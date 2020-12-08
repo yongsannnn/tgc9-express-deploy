@@ -3,7 +3,6 @@ const express = require('express');
 const {setupExpressApp} = require('./setupExpress');
 const {setupHBS} = require('./setupHBS');
 const MongoUtil = require('./MongoUtil.js')
-const ObjectId = require('mongodb').ObjectId;
 
 // allows us to inject into the environment (the OS) our environmental variabkes
 require('dotenv').config();
