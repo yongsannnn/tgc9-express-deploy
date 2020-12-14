@@ -37,7 +37,7 @@ router.post('/add', async (req,res)=>{
 
     await db.collection('food').insertOne(newFoodRecord);
     req.flash('success_messages', 'New food record has been created')
-    res.redirect('/')
+    res.redirect('/food/')
 })
 
 router.get('/:id/update', async(req,res)=>{

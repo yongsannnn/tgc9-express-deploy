@@ -43,7 +43,7 @@ router.post('/login', async (req,res,next)=>{
             if (loginError) {
                  res.send("Error logging in")
             } else {
-                req.flash("Login successful!");
+                req.flash("success_messages", "Login successful!");
                 res.redirect("/users/success");
             }
         })
