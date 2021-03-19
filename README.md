@@ -46,3 +46,5 @@ At the end should see "Build succeeded!" and the link deployed to heroku
 9. Go to Heroku website, click on the repo. Click on Setting. Click on "Reveal Config Vars" to add in your MONGO_URL and the value. 
 
 10. If there are any errors, can refer to "More" -> "View Logs"
+
+11. completed
